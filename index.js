@@ -1,14 +1,14 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const Discord = require('discord.js');
+const Discord = require("discord.js");
+const VoiceQueueHandler = require("./VoiceQueueHandler");
 const client = new Discord.Client();
 const botToken = process.env.DISCORD_BOT_TOKEN;
-const googleTTS = require('google-tts-api');
+const googleTTS = require("google-tts-api");
 
 let guilds = {};
-const broadcast = client.voice.createBroadcast();
 
-client.on('message', async msg => {
+client.on("message", async msg => {
 	const message = msg.content;
 	const messageChannel = msg.channel;
 	if (messageChannel.type !== "text") return;
@@ -33,12 +33,9 @@ client.on('message', async msg => {
 					return;
 				}
 				const connection = await voiceChannel.join();
-				guilds[guildId] = {
-					"connection": connection,
-					"channelId": channelId, 
-					"queues": [],
-					"speaking": false
-				};
+				connection.setSpeaking(Discord.Speaking.FLAGS.PRIORITY_SPEAKING);
+				const voiceQueueHandler = new VoiceQueueHandler(connection, channelId);
+				guilds[guildId] = voiceQueueHandler;
 				connection.on('disconnect', () => {
 					delete guilds[guildId];
 				});
@@ -49,10 +46,10 @@ client.on('message', async msg => {
 					if (connection) {
 						connection.disconnect();
 					} else {
-						msg.reply.send("ボイスチャンネルに接続されていません!");
+						msg.reply("ボイスチャンネルに接続されていません!");
 					}
 				} else {
-					msg.reply.send("ボイスチャンネルに接続されていません!");
+					msg.reply("ボイスチャンネルに接続されていません!");
 				}
 			} else {
 				messageChannel.send("`/ondoku s`で呼び出せるよ\n`/ondoku b`で消えるよ");
@@ -64,13 +61,12 @@ client.on('message', async msg => {
 			const savingTextChannel = guild.channelId;
 			if (messageChannel == savingTextChannel) {
 				const audioUrl = getAudioUrl(message);
-				const dispatcher = broadcast.play(audioUrl);
-				guild.connection.play(broadcast);
+				guild.play(audioUrl);
 			}
 		}
 	}
 });
-  
+
 client.login(botToken);
 
 const getAudioUrl = (msg) => googleTTS.getAudioUrl(msg, {lang: 'ja', slow: false, host: 'https://translate.google.com'});
