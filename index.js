@@ -2,9 +2,10 @@ require("dotenv").config();
 
 const Discord = require("discord.js");
 const VoiceQueueHandler = require("./VoiceQueueHandler");
+const URL = require("url");
 const client = new Discord.Client();
 const botToken = process.env.DISCORD_BOT_TOKEN;
-const googleTTS = require("google-tts-api");
+const { v4: uuidv4 } = require('uuid');
 
 let guilds = {};
 
@@ -60,13 +61,19 @@ client.on("message", async msg => {
 		if (guild) {
 			const savingTextChannel = guild.channelId;
 			if (messageChannel == savingTextChannel) {
-				const audioUrl = getAudioUrl(message);
+				const audioUrl = getAudioUrl(getReplacedMessage(message));
 				guild.play(audioUrl);
 			}
 		}
 	}
 });
 
-client.login(botToken);
+//client.login(botToken);
 
-const getAudioUrl = (msg) => googleTTS.getAudioUrl(msg, {lang: 'ja', slow: false, host: 'https://translate.google.com'});
+const getAudioUrl = (msg) => `http://localhost:13698/voice?text=${msg}&voice=/usr/local/src/MMDAgent_Example-1.8/Voice/mei/mei_normal.htsvoice&uuid=${uuidv4()}`;
+
+console.log(getAudioUrl("test"));
+
+const getReplacedMessage = (message) => {
+	return message.replace(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略");
+}
