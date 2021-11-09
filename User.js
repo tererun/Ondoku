@@ -6,18 +6,18 @@ class UserData {
 			name: "User",
 			properties: {
 				_id: 'string',
-				pitch: 'double'
+				pitch: 'float'
 			},
 			primaryKey: '_id'
 		};
-		this.realm = await Realm.open({
+		this.realm = new Realm.open({
 			schema: [User],
 		});
 	}
 
 	
 	getUserPitch = (userId) => {
-		const user = realm.objects("User");
+		const user = this.realm.objects("User");
 		const filterdUser = user.filtered(`_id == '${userId}'`);
 		const pitch;
 		if (filterdUser.length == 0) {
@@ -31,7 +31,7 @@ class UserData {
 	
 	setUserPitch = (userId, pitch) => {
 		realm.write(() => {
-			const user = realm.objects("User");
+			const user = this.realm.objects("User");
 			const filterdUser = user.filtered(`_id == '${userId}'`);
 			if (filterdUser.length == 0) {
 				realm.create("User", { _id: userId, pitch: pitch});
