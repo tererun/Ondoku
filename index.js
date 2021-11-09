@@ -31,11 +31,11 @@ client.on("message", async msg => {
 			if (commands[1] === "s") {
 				const voiceChannel = member.voice.channel;
 				if (guilds[guildId]) {
-					msg.reply.send("既にこのサーバーには呼び出されています!");
+					msg.reply("既にこのサーバーには呼び出されています!");
 					return;
 				}
 				if (!voiceChannel) {
-					msg.reply.send("ボイスチャンネルに入った状態で呼び出してください!");
+					msg.reply("ボイスチャンネルに入った状態で呼び出してください!");
 					return;
 				}
 				const connection = await voiceChannel.join();
@@ -52,25 +52,25 @@ client.on("message", async msg => {
 					if (connection) {
 						connection.disconnect();
 					} else {
-						msg.reply.send("ボイスチャンネルに接続されていません!");
+						msg.reply("ボイスチャンネルに接続されていません!");
 					}
 				} else {
-					msg.reply.send("ボイスチャンネルに接続されていません!");
+					msg.reply("ボイスチャンネルに接続されていません!");
 				}
 			} else if (commands[1] === "p") {
 				if (commands.length <= 2) {
-					msg.reply.send("引数を入力してください!");
+					msg.reply("引数を入力してください!");
 				} else {
 					if (Number.isFinite(commands[2])) {
 						const number = new Number(commands[2]);
 						if (number <= 24 && number >= -24) {
 							user.setUserPitch(memberId, number);
-							msg.reply.send(`声の高さを \`${number}\` に設定しました`);
+							msg.reply(`声の高さを \`${number}\` に設定しました`);
 						} else {
-							msg.reply.send("-24~24の値を入力してください!");
+							msg.reply("-24~24の値を入力してください!");
 						}
 					} else {
-						msg.reply.send("数値を入力してください!");
+						msg.reply("数値を入力してください!");
 					}
 				}
 			} else {
