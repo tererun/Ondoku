@@ -2,10 +2,11 @@ require("dotenv").config();
 
 const Discord = require("discord.js");
 const VoiceQueueHandler = require("./VoiceQueueHandler");
-const URL = require("url");
+const UserData = require("./User");
 const client = new Discord.Client();
 const botToken = process.env.DISCORD_BOT_TOKEN;
 const { v4: uuidv4 } = require('uuid');
+const user = new UserData();
 
 let guilds = {};
 
@@ -17,16 +18,16 @@ client.on("message", async msg => {
 	const guildId = msg.guild.id;
 	const channelId = messageChannel.id;
 	const member = msg.member;
+	const memberId = member.id;
 	if (message.startsWith("/ondoku")) {
 		const commands = message.split(" ");
 		if (commands.length <= 1) {
-			messageChannel.send("`/ondoku s`で呼び出せるよ");
-			messageChannel.send("`/ondoku b`で消えるよ");
+			sendHelpMessage(messageChannel);
 		} else {
 			if (commands[1] === "s") {
 				const voiceChannel = member.voice.channel;
 				if (guilds[guildId]) {
-					msg.reply("既にこのサーバーには呼び出されています!");
+					msg.reply.send("既にこのサーバーには呼び出されています!");
 					return;
 				}
 				if (!voiceChannel) {
@@ -47,13 +48,29 @@ client.on("message", async msg => {
 					if (connection) {
 						connection.disconnect();
 					} else {
-						msg.reply("ボイスチャンネルに接続されていません!");
+						msg.reply.send("ボイスチャンネルに接続されていません!");
 					}
 				} else {
-					msg.reply("ボイスチャンネルに接続されていません!");
+					msg.reply.send("ボイスチャンネルに接続されていません!");
+				}
+			} else if (commands[1] === "p") {
+				if (commands.length <= 2) {
+					msg.reply.send("引数を入力してください!");
+				} else {
+					if (Number.isFinite(commands[2])) {
+						const number = new Number(commands[2]);
+						if (number <= 24 && number >= -24) {
+							user.setUserPitch(memberId, number);
+							msg.reply.send(`声の高さを \`${number}\` に設定しました`);
+						} else {
+							msg.reply.send("-24~24の値を入力してください!");
+						}
+					} else {
+						msg.reply.send("数値を入力してください!");
+					}
 				}
 			} else {
-				messageChannel.send("`/ondoku s`で呼び出せるよ\n`/ondoku b`で消えるよ");
+				sendHelpMessage(messageChannel);
 			}
 		}
 	} else {
@@ -61,18 +78,44 @@ client.on("message", async msg => {
 		if (guild) {
 			const savingTextChannel = guild.channelId;
 			if (messageChannel == savingTextChannel) {
-				const audioUrl = getAudioUrl(getReplacedMessage(message));
+				const audioUrl = getAudioUrl(getReplacedMessage(message), user.getUserPitch(memberId));
 				guild.play(audioUrl);
 			}
 		}
 	}
 });
 
-//client.login(botToken);
+client.login(botToken);
 
-const getAudioUrl = (msg) => `http://localhost:13698/voice?text=${msg}&voice=/usr/local/src/MMDAgent_Example-1.8/Voice/mei/mei_normal.htsvoice&uuid=${uuidv4()}`;
+const getAudioUrl = (msg, pitch) => `http://localhost:13698/voice?text=${msg}&voice=/usr/local/src/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice&uuid=${uuidv4()}&fm=${pitch}`;
 
-console.log(getAudioUrl("test"));
+const sendHelpMessage = (messageChannel) => {
+	messageChannel.send(
+		{embed: {
+			color: 0xc8e3d4,
+			title: "Help / ヘルプ",
+			description: "　読み上げBot「Ondoku」のヘルプです。",
+			fields: [
+				{
+					name: ":keyboard: **Commands** >",
+					value: "　`/ondoku`　このヘルプを表示\n" +
+						   "　`/ondoku s`　Ondoku を召喚します\n" +
+						   "　`/ondoku b`　Ondoku を片付けます\n" +
+						   "　`/ondoku p 数値`　声の高さを`[-24~24]`の間で変更します"
+				},
+				{
+					name: ":level_slider: **Using** >",
+					value: "　`OpenJTalk`　音声合成システム\n" +
+						   "　`HTS voice tohoku-f01`　[音響モデル](https://github.com/icn-lab/htsvoice-tohoku-f01)\n"
+				}
+			],
+			footer: {
+				icon_url: client.user.avatarURL,
+				text: "てれるんお手製"
+			},
+		}}
+	);
+};
 
 const getReplacedMessage = (message) => {
 	return message.replace(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略");
