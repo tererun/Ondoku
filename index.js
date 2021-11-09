@@ -82,6 +82,7 @@ client.on("message", async msg => {
 		if (guild) {
 			const savingTextChannel = guild.channelId;
 			if (messageChannel == savingTextChannel) {
+				
 				const audioUrl = getAudioUrl(getReplacedMessage(message), user.getUserPitch(memberId));
 				guild.play(audioUrl);
 			}
@@ -122,5 +123,9 @@ const sendHelpMessage = (messageChannel) => {
 };
 
 const getReplacedMessage = (message) => {
-	return message.replace(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略");
+	let replacedMessage = message.replace(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略").replace(/<a?:[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]:[0-9]>/gi, "");
+	if (replacedMessage.length >= 240) {
+		replacedMessage = replacedMessage.substring(0, 240);
+	}
+	return replacedMessage;
 }
