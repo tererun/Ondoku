@@ -11,7 +11,7 @@ class UserData {
 			primaryKey: '_id'
 		};
 		this.realm = new Realm.open({
-			schema: [User],
+			schema: [this.User],
 		});
 	}
 
