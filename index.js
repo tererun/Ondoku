@@ -61,7 +61,7 @@ client.on("message", async msg => {
 				if (commands.length <= 2) {
 					msg.reply("引数を入力してください!");
 				} else {
-					if (Number.isFinite(commands[2])) {
+					if (isFinite(commands[2])) {
 						const number = new Number(commands[2]);
 						if (number <= 24 && number >= -24) {
 							user.setUserPitch(memberId, number);
