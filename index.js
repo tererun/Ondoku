@@ -10,6 +10,10 @@ const user = new UserData();
 
 let guilds = {};
 
+client.on("ready", () => {
+	console.log("ready!!!");
+});
+
 client.on("message", async msg => {
 	const message = msg.content;
 	const messageChannel = msg.channel;
