@@ -19,7 +19,7 @@ class UserData {
 	getUserPitch = (userId) => {
 		const user = this.realm.objects("User");
 		const filterdUser = user.filtered(`_id == '${userId}'`);
-		const pitch;
+		let pitch;
 		if (filterdUser.length == 0) {
 			pitch = getRandomArbitrary(-24, 24);
 			setUserPitch(userId, pitch);
