@@ -10,7 +10,7 @@ class UserData {
 			},
 			primaryKey: '_id'
 		};
-		this.realm = new Realm.open({
+		this.realm = new Realm({
 			schema: [this.User],
 		});
 	}
