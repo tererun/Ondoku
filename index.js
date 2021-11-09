@@ -123,7 +123,7 @@ const sendHelpMessage = (messageChannel) => {
 };
 
 const getReplacedMessage = (message) => {
-	let replacedMessage = message.replace(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略").replace(/<a?:[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]:[0-9]>/gi, "");
+	let replacedMessage = message.replaceAll(/https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g, "URL省略").replaceAll(/<a?:[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+:[0-9]+>/g, "");
 	if (replacedMessage.length >= 240) {
 		replacedMessage = replacedMessage.substring(0, 240);
 	}
