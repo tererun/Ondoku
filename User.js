@@ -21,8 +21,8 @@ class UserData {
 		const filterdUser = user.filtered(`_id == '${userId}'`);
 		let pitch;
 		if (filterdUser.length == 0) {
-			pitch = getRandomArbitrary(-24, 24);
-			setUserPitch(userId, pitch);
+			pitch = this.getRandomArbitrary(-24, 24);
+			this.setUserPitch(userId, pitch);
 		} else {
 			pitch = filterdUser[0].pitch;
 		}
@@ -30,11 +30,11 @@ class UserData {
 	};
 	
 	setUserPitch = (userId, pitch) => {
-		realm.write(() => {
+		this.realm.write(() => {
 			const user = this.realm.objects("User");
 			const filterdUser = user.filtered(`_id == '${userId}'`);
 			if (filterdUser.length == 0) {
-				realm.create("User", { _id: userId, pitch: pitch});
+				this.realm.create("User", { _id: userId, pitch: pitch});
 			} else {
 				filterdUser[0].pitch = pitch;
 			}
