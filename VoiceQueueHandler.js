@@ -6,7 +6,7 @@ class VoiceQueueHandler {
 		this.channelId = channelId;
 		this.queues = [];
 	}
-	
+
 	play(audioUrl) {
 		if (this.connection.speaking == Discord.Speaking.FLAGS.PRIORITY_SPEAKING) {
 			this.connection.setSpeaking(Discord.Speaking.FLAGS.SPEAKING);

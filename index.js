@@ -82,7 +82,7 @@ client.on("message", async msg => {
 		if (guild) {
 			const savingTextChannel = guild.channelId;
 			if (messageChannel == savingTextChannel) {
-				
+
 				const audioUrl = getAudioUrl(getReplacedMessage(message), user.getUserPitch(memberId));
 				guild.play(audioUrl);
 			}

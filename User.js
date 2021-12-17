@@ -15,7 +15,6 @@ class UserData {
 		});
 	}
 
-	
 	getUserPitch (userId) {
 		const user = this.realm.objects("User");
 		const filterdUser = user.filtered(`_id == '${userId}'`);
@@ -28,7 +27,7 @@ class UserData {
 		}
 		return pitch;
 	};
-	
+
 	setUserPitch (userId, pitch) {
 		this.realm.write(() => {
 			const user = this.realm.objects("User");
@@ -40,7 +39,7 @@ class UserData {
 			}
 		});
 	};
-	
+
 	getRandomArbitrary(min, max) {
 		return Math.random() * (max - min) + min;
 	}
