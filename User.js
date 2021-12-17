@@ -3,7 +3,7 @@ const Realm = require('realm');
 class UserData {
 	constructor() {
 		this.User = {
-			name: "User",
+			name: 'User',
 			properties: {
 				_id: 'string',
 				pitch: 'float'
@@ -16,7 +16,7 @@ class UserData {
 	}
 
 	getUserPitch (userId) {
-		const user = this.realm.objects("User");
+		const user = this.realm.objects('User');
 		const filterdUser = user.filtered(`_id == '${userId}'`);
 		let pitch;
 		if (filterdUser.length == 0) {
@@ -30,10 +30,10 @@ class UserData {
 
 	setUserPitch (userId, pitch) {
 		this.realm.write(() => {
-			const user = this.realm.objects("User");
+			const user = this.realm.objects('User');
 			const filterdUser = user.filtered(`_id == '${userId}'`);
 			if (filterdUser.length == 0) {
-				this.realm.create("User", { _id: userId, pitch: pitch});
+				this.realm.create('User', { _id: userId, pitch: pitch});
 			} else {
 				filterdUser[0].pitch = pitch;
 			}
