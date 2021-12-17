@@ -16,7 +16,7 @@ class UserData {
 	}
 
 	
-	getUserPitch = (userId) => {
+	getUserPitch (userId) {
 		const user = this.realm.objects("User");
 		const filterdUser = user.filtered(`_id == '${userId}'`);
 		let pitch;
@@ -29,7 +29,7 @@ class UserData {
 		return pitch;
 	};
 	
-	setUserPitch = (userId, pitch) => {
+	setUserPitch (userId, pitch) {
 		this.realm.write(() => {
 			const user = this.realm.objects("User");
 			const filterdUser = user.filtered(`_id == '${userId}'`);
