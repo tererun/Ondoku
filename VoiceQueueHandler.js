@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 
 class VoiceQueueHandler {
 	constructor(connection, channelId) {
@@ -6,12 +6,12 @@ class VoiceQueueHandler {
 		this.channelId = channelId;
 		this.queues = [];
 	}
-	
+
 	play(audioUrl) {
 		if (this.connection.speaking == Discord.Speaking.FLAGS.PRIORITY_SPEAKING) {
 			this.connection.setSpeaking(Discord.Speaking.FLAGS.SPEAKING);
 			const dispatcher = this.connection.play(audioUrl);
-			dispatcher.on("speaking", (speaking) => {
+			dispatcher.on('speaking', (speaking) => {
 				if (speaking) return;
 				this.connection.setSpeaking(Discord.Speaking.FLAGS.PRIORITY_SPEAKING);
 				if (this.queues.length != 0) {
