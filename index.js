@@ -92,7 +92,7 @@ client.on('message', async msg => {
 
 client.login(botToken);
 
-const getAudioUrl = (msg, pitch) => `http://localhost:13698/voice?text=${msg}&voice=/usr/local/src/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice&uuid=${uuidv4()}&fm=${pitch}`;
+const getAudioUrl = (msg, pitch) => `http://localhost:13698/voice?text=${encodeURIComponent(msg)}&voice=/usr/local/src/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice&uuid=${uuidv4()}&fm=${encodeURIComponent(pitch)}`;
 
 const sendHelpMessage = (messageChannel) => {
 	messageChannel.send(
